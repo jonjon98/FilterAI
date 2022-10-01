@@ -9,7 +9,7 @@ class Product(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     image = models.ImageField(null=True, blank=True,
                               default='/placeholder.png')
-    ARModel = models.JSONField(null=True, blank=True)
+    ARModel = models.FileField(upload_to='public', null=True, blank=True)
     brand = models.CharField(max_length=200, null=True, blank=True)
     category = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
