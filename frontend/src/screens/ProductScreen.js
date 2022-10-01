@@ -1,17 +1,69 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Row, Col, Image, ListGroup, Button, Card, Form } from 'react-bootstrap'
+import { Row, Col, Image, ListGroup, Button, Card, Form, Modal } from 'react-bootstrap'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { listProductDetails, createProductReview } from '../actions/productActions'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
+import Webcam from "react-webcam";
+import { Canvas } from '@react-three/fiber'
+import { OrbitControls, Stars, useGLTF, ContactShadows } from "@react-three/drei";
+import { Physics, usePlane, useBox } from "@react-three/cannon";
+
+function Shoe(props) {
+    const { nodes, materials } = useGLTF('shoe.glb')
+    return (
+      <group {...props} dispose={null}>
+        <mesh geometry={nodes.shoe.geometry} material={materials.laces} />
+        <mesh geometry={nodes.shoe_1.geometry} material={materials.mesh} />
+        <mesh geometry={nodes.shoe_2.geometry} material={materials.caps} />
+        <mesh geometry={nodes.shoe_3.geometry} material={materials.inner} />
+        <mesh geometry={nodes.shoe_4.geometry} material={materials.sole} />
+        <mesh geometry={nodes.shoe_5.geometry} material={materials.stripes} />
+        <mesh geometry={nodes.shoe_6.geometry} material={materials.band} />
+        <mesh geometry={nodes.shoe_7.geometry} material={materials.patch} />
+      </group>
+    )
+  }
+
+function Box() {
+	const [ref, api] = useBox(() => ({ mass: 1, position: [0, 2, 0] }));
+	return (
+		<mesh
+			onClick={() => {
+				api.velocity.set(0, 2, 0);
+			}}
+			ref={ref}
+			position={[0, 2, 0]}
+		>
+			<boxBufferGeometry attach="geometry" />
+			<meshLambertMaterial attach="material" color="hotpink" />
+		</mesh>
+	);
+}
+
+function Plane() {
+	const [ref] = usePlane(() => ({
+		rotation: [-Math.PI / 2, 0, 0],
+	}));
+	return (
+		<mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]}>
+			<planeBufferGeometry attach="geometry" args={[100, 100]} />
+			<meshLambertMaterial attach="material" color="lightblue" />
+		</mesh>
+	);
+}
 
 function ProductScreen({ match, history }) {
     const [qty, setQty] = useState(1)
     const [rating, setRating] = useState(0)
     const [comment, setComment] = useState('')
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const dispatch = useDispatch()
 
@@ -144,6 +196,14 @@ function ProductScreen({ match, history }) {
                                                     Add to Cart
                                                 </Button>
                                             </ListGroup.Item>
+                                            <ListGroup.Item>
+                                                <Button
+                                                    onClick={handleShow}
+                                                    className='btn-block'
+                                                    type='button'>
+                                                    View Model
+                                                </Button>
+                                            </ListGroup.Item>
                                         </ListGroup>
                                     </Card>
                                 </Col>
@@ -219,7 +279,28 @@ function ProductScreen({ match, history }) {
                     )
 
             }
-
+            <Modal show={show} size={'xl'} onHide={handleClose}>
+                <Modal.Header closeButton>
+                <Modal.Title>AR View</Modal.Title>
+                </Modal.Header>
+                <Modal.Body class="d-flex flex-row">
+                    <Webcam class="w-50"/>
+                    <Canvas style={{width: `100%`, height: `auto`, position: `relative` }}>
+                        <ambientLight intensity={0.3} />
+                        <spotLight intensity={0.3} angle={0.1} penumbra={1} position={[5, 25, 20]} />
+                        <Suspense fallback={null}>
+                        <Shoe />
+                        <ContactShadows rotation-x={Math.PI / 2} position={[0, -0.8, 0]} opacity={0.25} width={10} height={10} blur={2} far={1} />
+                        </Suspense>
+                        <OrbitControls minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2} enableZoom={true} enablePan={false} />
+                    </Canvas>
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                </Modal.Footer>
+            </Modal>
 
         </div >
     )
