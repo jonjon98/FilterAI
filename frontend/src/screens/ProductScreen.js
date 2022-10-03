@@ -12,9 +12,8 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stars, useGLTF, ContactShadows } from "@react-three/drei";
 import { Physics, usePlane, useBox } from "@react-three/cannon";
 
-function Shoe(props) {
+function Model(props) {
     const { nodes, materials } = useGLTF('test.glb')
-    console.log(nodes);
     return (
       <group {...props} dispose={null}>
         <mesh geometry={nodes.mesh_0.geometry} material={nodes.mesh_0.material}/>
@@ -29,34 +28,6 @@ function Shoe(props) {
       </group>
     )
   }
-
-function Box() {
-	const [ref, api] = useBox(() => ({ mass: 1, position: [0, 2, 0] }));
-	return (
-		<mesh
-			onClick={() => {
-				api.velocity.set(0, 2, 0);
-			}}
-			ref={ref}
-			position={[0, 2, 0]}
-		>
-			<boxBufferGeometry attach="geometry" />
-			<meshLambertMaterial attach="material" color="hotpink" />
-		</mesh>
-	);
-}
-
-function Plane() {
-	const [ref] = usePlane(() => ({
-		rotation: [-Math.PI / 2, 0, 0],
-	}));
-	return (
-		<mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]}>
-			<planeBufferGeometry attach="geometry" args={[100, 100]} />
-			<meshLambertMaterial attach="material" color="lightblue" />
-		</mesh>
-	);
-}
 
 function ProductScreen({ match, history }) {
     const [qty, setQty] = useState(1)
@@ -192,7 +163,7 @@ function ProductScreen({ match, history }) {
                                             <ListGroup.Item>
                                                 <Button
                                                     onClick={addToCartHandler}
-                                                    className='btn-block'
+                                                    className='btn-block btn-light'
                                                     disabled={product.countInStock == 0}
                                                     type='button'>
                                                     Add to Cart
@@ -201,7 +172,7 @@ function ProductScreen({ match, history }) {
                                             <ListGroup.Item>
                                                 <Button
                                                     onClick={handleShow}
-                                                    className='btn-block'
+                                                    className='btn-block btn-light'
                                                     type='button'>
                                                     View Model
                                                 </Button>
@@ -285,16 +256,16 @@ function ProductScreen({ match, history }) {
                 <Modal.Header closeButton>
                 <Modal.Title>AR View</Modal.Title>
                 </Modal.Header>
-                <Modal.Body class="d-flex flex-row">
-                    <Webcam class="w-50"/>
-                    <Canvas style={{width: `100%`, height: `auto`, position: `relative` }}>
+                <Modal.Body class="d-flex flex-row justify-content-center">
+                    <Webcam class=""/>
+                    <Canvas style={{width: `100%`, height: `100%`, position: `absolute`, top: `10%` }}>
                         <ambientLight intensity={0.3} />
                         <spotLight intensity={0.3} angle={0.1} penumbra={1} position={[5, 25, 20]} />
                         <Suspense fallback={null}>
-                        <Shoe />
+                        <Model />
                         <ContactShadows rotation-x={Math.PI / 2} position={[0, -0.8, 0]} opacity={0.25} width={10} height={10} blur={2} far={1} />
                         </Suspense>
-                        <OrbitControls minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2} enableZoom={true} enablePan={false} />
+                        <OrbitControls minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2} enableZoom={true} enablePan={false} minDistance={0.9} maxDistance={2}/>
                     </Canvas>
                 </Modal.Body>
                 <Modal.Footer>

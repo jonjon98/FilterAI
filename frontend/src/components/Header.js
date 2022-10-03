@@ -18,7 +18,7 @@ function Header() {
 
     return (
         <header>
-            <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+            <Navbar class="navbar navbar-dark bg-primary" variant="light" expand="lg" collapseOnSelect>
                 <Container>
                     <LinkContainer to='/'>
                         <Navbar.Brand>FilterAI</Navbar.Brand>
