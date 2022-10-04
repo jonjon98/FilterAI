@@ -1,27 +1,14 @@
-# PropShop Ecommerce Website With Django + React
+# FilterAI made with Django + React
 
-Live Demo can be viewed at https://www.buildproshop.com/
+This project is extended from https://github.com/divanov11/proshop_django
 
-This project is from my Django + React collaboration wih Brad Traversy. Full Course: https://www.udemy.com/course/django-with-react-an-ecommerce-website/?couponCode=387F19CD4087385E87C1
+# Extended Features
+* Camera functionality on product page
+* Able to upload and display 3d models
 
-
-![DEMO](../master/static/images/proshop_django_demo.png)
-
-
-# Features
-* Full featured shopping cart
-* Product reviews and ratings
-* Top products carousel
-* Product pagination
-* Product search feature
-* User profile with orders
-* Admin product management
-* Admin user management
-* Admin Order details page
-* Mark orders as delivered option
-* Checkout process (shipping, payment method, etc)
-* PayPal / credit card integration
-
+# Improvements that could be made
+* Full 3d model tracking on the subject (using AI) so user could use Augmented Reality to try on the products
+* More realistic models (by using AI)
 
 # Download & Setup Instructions
 
